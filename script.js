@@ -28,11 +28,12 @@ function generateTeams() {
     }
 
     teams.forEach((team, index) => {
-        standings[`Team ${index + 1}`] = 0;
+        standings[`Team ${index + 1}`] = { won: 0, lost: 0, matches: 0 };
     });
 
     saveToLocalStorage();
     displayTeams();
+    displayStandings(); // Display standings after generating teams
 }
 
 // Function to display the teams
@@ -81,8 +82,8 @@ function displaySchedule() {
             <div id="match-${index}">
                 <p>${match.match}</p>
                 ${match.winner === null ? `
-                    <button onclick="setWinner(${index}, '${team1}')">Team ${team1.split(' ')[1]} Wins</button>
-                    <button onclick="setWinner(${index}, '${team2}')">Team ${team2.split(' ')[1]} Wins</button>
+                    <button onclick="setWinner(${index}, '${team1}', '${team2}')">Team ${team1.split(' ')[1]} Wins</button>
+                    <button onclick="setWinner(${index}, '${team2}', '${team1}')">Team ${team2.split(' ')[1]} Wins</button>
                 ` : `<p>Winner: ${match.winner}</p>`}
                 ${match.winner !== null ? `<button onclick="resetMatch(${index})">Reset Match</button>` : ''}
             </div>
@@ -93,14 +94,17 @@ function displaySchedule() {
 }
 
 // Function to set match winner
-function setWinner(matchIndex, winner) {
+function setWinner(matchIndex, winner, loser) {
     if (matches[matchIndex].winner) {
         alert('Winner already set for this match.');
         return;
     }
 
     matches[matchIndex].winner = winner;
-    standings[winner]++;
+    standings[winner].won++;
+    standings[winner].matches++;
+    standings[loser].lost++;
+    standings[loser].matches++;
     saveToLocalStorage();
 
     const matchDiv = document.getElementById(`match-${matchIndex}`);
@@ -109,7 +113,7 @@ function setWinner(matchIndex, winner) {
         <button onclick="resetMatch(${matchIndex})">Reset Match</button>
     `;
 
-    displayStandings();
+    displayStandings(); // Update standings after setting winner
     if (matches.every(match => match.winner !== null)) {
         displayPlayoffs();
     }
@@ -123,36 +127,51 @@ function resetMatch(matchIndex) {
         return;
     }
 
-    standings[match.winner]--;
+    standings[match.winner].won--;
+    standings[match.winner].matches--;
+    const loser = match.match.replace(match.winner, '').replace(' vs ', '').trim();
+    standings[loser].lost--;
+    standings[loser].matches--;
     match.winner = null;
     saveToLocalStorage();
 
     const matchDiv = document.getElementById(`match-${matchIndex}`);
     matchDiv.innerHTML = `
         <p>${match.match}</p>
-        <button onclick="setWinner(${matchIndex}, '${match.match.split(' vs ')[0]}')">Team ${match.match.split(' vs ')[0].split(' ')[1]} Wins</button>
-        <button onclick="setWinner(${matchIndex}, '${match.match.split(' vs ')[1]}')">Team ${match.match.split(' vs ')[1].split(' ')[1]} Wins</button>
+        <button onclick="setWinner(${matchIndex}, '${match.match.split(' vs ')[0]}', '${match.match.split(' vs ')[1]}')">Team ${match.match.split(' vs ')[0].split(' ')[1]} Wins</button>
+        <button onclick="setWinner(${matchIndex}, '${match.match.split(' vs ')[1]}', '${match.match.split(' vs ')[0]}')">Team ${match.match.split(' vs ')[1].split(' ')[1]} Wins</button>
         <button onclick="resetMatch(${matchIndex})">Reset Match</button>
     `;
 
-    displayStandings();
+    displayStandings(); // Update standings after resetting match
 }
 
 // Function to display standings
 function displayStandings() {
-    const sortedTeams = Object.keys(standings).sort((a, b) => standings[b] - standings[a]);
-    let standingsOutput = '<h2>Standings:</h2><ul>';
-    sortedTeams.forEach(team => {
-        standingsOutput += `<li>${team}: ${standings[team]} wins</li>`;
-    });
-    standingsOutput += '</ul>';
+    const sortedTeams = Object.keys(standings).sort((a, b) => standings[b].won - standings[a].won);
+    let standingsTable = document.querySelector('#standings-table tbody');
+    standingsTable.innerHTML = '';
 
-    document.getElementById('standings').innerHTML = standingsOutput;
+    if (sortedTeams.length === 0) {
+        document.getElementById('standings').classList.add('hidden');
+    } else {
+        document.getElementById('standings').classList.remove('hidden');
+        sortedTeams.forEach(team => {
+            standingsTable.innerHTML += `
+                <tr>
+                    <td data-label="Team">${team}</td>
+                    <td data-label="Matches">${standings[team].matches}</td>
+                    <td data-label="Won">${standings[team].won}</td>
+                    <td data-label="Lost">${standings[team].lost}</td>
+                </tr>
+            `;
+        });
+    }
 }
 
 // Function to display playoffs
 function displayPlayoffs() {
-    const sortedTeams = Object.keys(standings).sort((a, b) => standings[b] - standings[a]);
+    const sortedTeams = Object.keys(standings).sort((a, b) => standings[b].won - standings[a].won);
     const output = document.getElementById('output');
 
     output.innerHTML += '<h2>Playoffs:</h2>';
@@ -166,7 +185,7 @@ function displayPlayoffs() {
     }
 }
 
-// Function to shuffle an array (Fisher-Yates shuffle algorithm)
+// Function to shuffle an array
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -175,29 +194,29 @@ function shuffleArray(array) {
     return array;
 }
 
-// Save data to localStorage
+// Function to save the current state to local storage
 function saveToLocalStorage() {
     localStorage.setItem('teams', JSON.stringify(teams));
     localStorage.setItem('matches', JSON.stringify(matches));
     localStorage.setItem('standings', JSON.stringify(standings));
 }
 
-// Load data from localStorage
+// Function to load the saved state from local storage
 function loadFromLocalStorage() {
-    const savedTeams = JSON.parse(localStorage.getItem('teams'));
-    const savedMatches = JSON.parse(localStorage.getItem('matches'));
-    const savedStandings = JSON.parse(localStorage.getItem('standings'));
+    const savedTeams = localStorage.getItem('teams');
+    const savedMatches = localStorage.getItem('matches');
+    const savedStandings = localStorage.getItem('standings');
 
-    if (savedTeams) teams = savedTeams;
-    if (savedMatches) matches = savedMatches;
-    if (savedStandings) standings = savedStandings;
+    if (savedTeams && savedMatches && savedStandings) {
+        teams = JSON.parse(savedTeams);
+        matches = JSON.parse(savedMatches);
+        standings = JSON.parse(savedStandings);
 
-    displayTeams();
-    displaySchedule();
-    displayStandings();
+        displayTeams();
+        displaySchedule();
+        displayStandings();
+    }
 }
 
-// Load data when the page loads
-window.onload = function() {
-    loadFromLocalStorage();
-};
+// Load the saved state when the page loads
+window.onload = loadFromLocalStorage;
