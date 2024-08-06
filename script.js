@@ -4,18 +4,20 @@ let standings = {};
 
 // Function to generate teams from players
 function generateTeams() {
-    if (!confirm('Are you sure you want to generate teams? This will reset the current teams.')) {
-        return;
-    }
 
     const playersInput = document.getElementById('players').value;
     const numTeams = parseInt(document.getElementById('numTeams').value);
     let players = playersInput.split(',').map(player => player.trim());
+    document.getElementById('standings').classList.add('hidden');
 
     if (players.length < numTeams) {
         alert('Number of players is less than number of teams');
         return;
+    } else if (!confirm('Are you sure you want to generate teams? This will reset the current teams.')) {
+        return;
     }
+
+    document.getElementById('teamup').classList.remove('hidden');
 
     teams = Array.from({ length: numTeams }, () => []);
     standings = {};
@@ -33,17 +35,23 @@ function generateTeams() {
 
     saveToLocalStorage();
     displayTeams();
-    displayStandings(); // Display standings after generating teams
-}
+ }
 
 // Function to display the teams
 function displayTeams() {
     const output = document.getElementById('output');
-    output.innerHTML = '<h2>Teams:</h2>';
+    output.innerHTML = '';
+    const playoffsDiv = document.getElementById('playoffs');
+    playoffsDiv.classList.add('hidden');
+    let teamups = document.querySelector('#teamup-players tbody');
+    teamups.innerHTML = '';
+
     teams.forEach((team, index) => {
-        output.innerHTML += `
-            <h3>Team ${index + 1}</h3>
-            <ul>${team.map(player => `<li>${player}</li>`).join('')}</ul>
+        teamups.innerHTML += `
+            <tr>
+                <td>Team ${index + 1}</td>
+                <td>${team.join(', ')}</td>
+            </tr>
         `;
     });
 }
@@ -68,7 +76,8 @@ function scheduleGames() {
 
     matches = shuffleArray(matches);
     saveToLocalStorage();
-    displaySchedule();
+    displaySchedule(); 
+    displayStandings();
 }
 
 // Function to display the schedule
@@ -80,12 +89,12 @@ function displaySchedule() {
         const team2 = matchTeams[1];
         schedule += `
             <div id="match-${index}">
-                <p>${match.match}</p>
-                ${match.winner === null ? `
-                    <button onclick="setWinner(${index}, '${team1}', '${team2}')">Team ${team1.split(' ')[1]} Wins</button>
-                    <button onclick="setWinner(${index}, '${team2}', '${team1}')">Team ${team2.split(' ')[1]} Wins</button>
-                ` : `<p>Winner: ${match.winner}</p>`}
-                ${match.winner !== null ? `<button onclick="resetMatch(${index})">Reset Match</button>` : ''}
+                <p>
+                    ${team1} <i class='far fa-check-circle' style='font-size:25px;color:#ffa31a' onclick="setWinner(${index}, '${team1}', '${team2}')"></i> 
+                    vs 
+                    ${team2} <i class='far fa-check-circle' style='font-size:25px;color:#ffa31a' onclick="setWinner(${index}, '${team2}', '${team1}')"></i>
+                </p>
+                ${match.winner !== null ? `<p>Winner: ${match.winner} <button onclick="resetMatch(${index})">Reset Match</button></p>` : ''}
             </div>
         `;
     });
@@ -109,8 +118,8 @@ function setWinner(matchIndex, winner, loser) {
 
     const matchDiv = document.getElementById(`match-${matchIndex}`);
     matchDiv.innerHTML = `
-        <p>${matches[matchIndex].match} - Winner: ${winner}</p>
-        <button onclick="resetMatch(${matchIndex})">Reset Match</button>
+        <p>${matches[matchIndex].match} <a class='form-group'> - Winner: ${winner} </a>
+        <button onclick="resetMatch(${matchIndex})">Reset Match</button></p>
     `;
 
     displayStandings(); // Update standings after setting winner
@@ -136,15 +145,22 @@ function resetMatch(matchIndex) {
     saveToLocalStorage();
 
     const matchDiv = document.getElementById(`match-${matchIndex}`);
+    const matchTeams = match.match.split(' vs ');
+    const team1 = matchTeams[0];
+    const team2 = matchTeams[1];
+
     matchDiv.innerHTML = `
-        <p>${match.match}</p>
-        <button onclick="setWinner(${matchIndex}, '${match.match.split(' vs ')[0]}', '${match.match.split(' vs ')[1]}')">Team ${match.match.split(' vs ')[0].split(' ')[1]} Wins</button>
-        <button onclick="setWinner(${matchIndex}, '${match.match.split(' vs ')[1]}', '${match.match.split(' vs ')[0]}')">Team ${match.match.split(' vs ')[1].split(' ')[1]} Wins</button>
-        <button onclick="resetMatch(${matchIndex})">Reset Match</button>
+        <p>
+            ${team1} <i class='far fa-check-circle' style='font-size:25px;color:#ffa31a' onclick="setWinner(${matchIndex}, '${team1}', '${team2}')"></i> 
+            vs 
+            ${team2} <i class='far fa-check-circle' style='font-size:25px;color:#ffa31a' onclick="setWinner(${matchIndex}, '${team2}', '${team1}')"></i>
+            <button onclick="resetMatch(${matchIndex})">Reset Match</button>
+        </p>
     `;
 
     displayStandings(); // Update standings after resetting match
 }
+
 
 // Function to display standings
 function displayStandings() {
@@ -169,20 +185,18 @@ function displayStandings() {
     }
 }
 
-// Function to display playoffs
 function displayPlayoffs() {
     const sortedTeams = Object.keys(standings).sort((a, b) => standings[b].won - standings[a].won);
-    const output = document.getElementById('output');
+    const playoffsDiv = document.getElementById('playoffs');
 
-    output.innerHTML += '<h2>Playoffs:</h2>';
     if (sortedTeams.length >= 4) {
-        output.innerHTML += `<p>Eliminator: ${sortedTeams[2]} vs ${sortedTeams[3]}</p>`;
-        output.innerHTML += `<p>Qualifier 1: ${sortedTeams[0]} vs ${sortedTeams[1]}</p>`;
-        output.innerHTML += `<p>Qualifier 2: Winner of Eliminator vs Loser of Qualifier 1</p>`;
-        output.innerHTML += `<p>Final: Winner of Qualifier 1 vs Winner of Qualifier 2</p>`;
-    } else {
-        output.innerHTML += '<p>Not enough teams for playoffs.</p>';
-    }
+        playoffsDiv.classList.remove('hidden');
+
+        document.getElementById('eliminator-teams').textContent = `${sortedTeams[2]} vs ${sortedTeams[3]}`;
+        document.getElementById('qualifier1-teams').textContent = `${sortedTeams[0]} vs ${sortedTeams[1]}`;
+        document.getElementById('qualifier2-teams').textContent = 'Winner of Eliminator vs Loser of Qualifier 1';
+        document.getElementById('final-teams').textContent = 'Winner of Qualifier 1 vs Winner of Qualifier 2';
+    } 
 }
 
 // Function to shuffle an array
@@ -215,6 +229,7 @@ function loadFromLocalStorage() {
         displayTeams();
         displaySchedule();
         displayStandings();
+        displayPlayoffs();
     }
 }
 

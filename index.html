@@ -2,46 +2,32 @@
 <html lang="en">
 
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Oswald:wght@500&family=Pinyon+Script&family=Syne:wght@533&display=swap"
+        rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Generator and Scheduler</title>
     <link rel="stylesheet" href="styles.css">
+
 </head>
 
 <body>
     <div class="container">
-        <h1>Team Generator and Scheduler</h1>
-        <div class="form-group">
-            <label for="players">Enter players (comma-separated):</label>
-            <input type="text" id="players" placeholder="e.g., John, Jane, Doe, Smith">
+        <div class="header">
+            <h1>Team Generator and Scheduler</h1>
         </div>
-        <div class="form-group">
-            <label for="numTeams">Number of teams:</label>
-            <input type="number" id="numTeams" min="2" max="10" value="2">
+        <div class="menu-container">
+            <a class="button" style="width: 60%;" href="teamGenerator.html">Team Generator</a>
+            <!-- <a class="button" style="width: 60%;" href="randomTeam.html">Random Team Generator</a> -->
+            <!-- <a class="button" style="width: 60%;" href="flipCoin.html">Flip a coin</a> -->
         </div>
-        <button onclick="generateTeams()">Generate Teams</button>
-        <button onclick="scheduleGames()">Schedule Games</button>
-
-        <div id="standings" class="hidden">
-            <h2>Table:</h2>
-            <table id="standings-table">
-                <thead>
-                    <tr>
-                        <th>Team</th>
-                        <th>Matches</th>
-                        <th>Won</th>
-                        <th>Lost</th>
-                    </tr>
-                </thead>
-                <tbody> </tbody>
-            </table>
+        <div class="footer">
+            <p></p>
         </div>
-
-
-        <div id="output"></div>
     </div>
-
-    <script src="script.js"></script>
 </body>
 
 </html>

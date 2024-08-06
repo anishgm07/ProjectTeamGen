@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Oswald:wght@500&family=Pinyon+Script&family=Syne:wght@533&display=swap"
+        rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Generator and Scheduler</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Team Generator</h1>
+        </div>
+        
+        <div class="sub-container">
+            <div class="form-group">
+                <label for="players">Enter player names (one per line):</label>
+                <textarea id="players" placeholder="Enter names here!"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="numTeams">Number of teams:</label>
+                <div class="select-container">
+                    <select id="numTeams"></select>
+                </div>
+            </div>
+            <button onclick="generateTeams()">Generate Teams</button>
+
+            <div id="teamup" class="hidden">
+                <h2>Teams:</h2>
+                <table id="teamup-players">
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Players</th>
+                        </tr>
+                    </thead>
+                    <tbody> </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                <a href="index.html" class="button">Back to Main Menu</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="teamGenerate.js"></script>
+    <script src="common.js"></script>
+</body>
+
+</html>
