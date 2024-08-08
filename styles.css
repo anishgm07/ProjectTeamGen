@@ -68,7 +68,7 @@ textarea {
     width: 60%;
     min-width: 260px;
     max-width: 500px;
-    height: 100px; 
+    height: 200px; 
     box-sizing: border-box;
     padding: 10px;
     margin: 5px 0;
@@ -204,7 +204,7 @@ tr:nth-child(even) {
 }
 
 .error-border {
-    border: 3px solid red !important;
+    border: 2px solid red !important;
 }
 
 
