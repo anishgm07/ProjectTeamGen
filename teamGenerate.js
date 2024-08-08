@@ -5,6 +5,7 @@ function generateTeams() {
 
     const playersInput = document.getElementById('players');
     const teamUp = document.getElementById('teamup');
+    const generateButton = document.getElementById('generateButton');
     const playersValue = playersInput.value;
     const numTeams = parseInt(document.getElementById('numTeams').value);
     let players = playersValue.split('\n').map(player => player.trim());
@@ -50,6 +51,8 @@ function generateTeams() {
 
     saveToLocalStorage();
     displayTeams();
+    generateButton.textContent = 'Re-generate Teams';
+
 }
 
 // Function to display the teams
@@ -67,6 +70,14 @@ function displayTeams() {
     });
 }
 
+//  Function to change Button name
+function generateLabel() {
+    const generateButton = document.getElementById('generateButton');
+    const teamUp = document.getElementById('teamup');
+
+    generateButton.textContent = 'Generate Teams';
+    teamUp.classList.add('hidden');
+}
 
 // Function to save the current state to local storage
 function saveToLocalStorage() {

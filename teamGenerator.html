@@ -23,7 +23,7 @@
         <div class="sub-container">
             <div class="form-group">
                 <label for="players">Enter player names (one per line):</label>
-                <textarea id="players" placeholder="Enter names here!"></textarea>
+                <textarea onchange="generateLabel()" id="players" placeholder="Enter names here!"></textarea>
             </div>
             <div class="form-group">
                 <label for="numTeams">Number of teams:</label>
@@ -31,7 +31,7 @@
                     <select id="numTeams"></select>
                 </div>
             </div>
-            <button onclick="generateTeams()">Generate Teams</button>
+            <button id="generateButton" onclick="generateTeams()">Generate Teams</button>
 
             <div id="teamup" class="hidden">
                 <h2>Teams:</h2>
