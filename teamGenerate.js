@@ -23,6 +23,20 @@ function generateTeams() {
         return;
     }
 
+    if (players.length === numTeams) {
+        alert('Number of players is equal to the number of teams.');
+        return;
+    }
+
+    const remainder = players.length % numTeams;
+
+    if (remainder !== 0) {
+        const userConfirmed = confirm('It’s not possible to distribute players equally. Proceed with uneven distribution?');
+        if (!userConfirmed) {
+            return; 
+        }
+    }
+
     teamUp.classList.remove('hidden');
 
     teams = Array.from({ length: numTeams }, () => []);
