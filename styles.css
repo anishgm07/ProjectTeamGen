@@ -12,19 +12,30 @@ body {
 }
 
 .header {
-    background-color: #151515;
+    background-color: #222222;
     padding: 5px;
     text-align: center;
     color: #ffffff;
     margin: 20px 0px;
+    border-radius: 5px;
 }
 
 .footer {
-    background-color: #151515;
+    display: flex;
+    background-color: #222222;
     padding: 5px;
     text-align: center;
     color: #ffffff;
     margin: 10px 0px;
+    border-radius: 5px;
+}
+
+.sub-footer {
+    width: 100%;
+    margin: 5px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .container {
@@ -39,6 +50,22 @@ body {
     max-width: 500px;
     width: 100%;
     min-height: 100vh;
+}
+
+.light-mode {
+    background-color: #f7f7f7;
+}
+
+.light-mode-header {
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.light-mode-footer {
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .menu-container {
@@ -67,8 +94,9 @@ h1 {
 textarea {
     width: 60%;
     min-width: 260px;
-    max-width: 500px;
-    height: 200px; 
+    max-width: 380px;
+    height: 200px;
+    min-height: 200px;
     box-sizing: border-box;
     padding: 10px;
     margin: 5px 0;
@@ -167,7 +195,7 @@ tr:nth-child(even) {
 .select-container {
     position: relative;
     display: inline-block;
-    width: 50px;
+    width: 110px;
 }
 
 /* The select box itself */
@@ -187,20 +215,18 @@ tr:nth-child(even) {
 /* Custom arrow for the select box */
 .select-container::after {
     content: '\25BC';
-    /* Unicode character for down arrow */
     position: absolute;
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
     pointer-events: none;
-    /* Make sure the arrow is not clickable */
     color: #ffa31a;
 }
 
 /* Style for the select box when focused */
 .select-container select:focus {
     border-color: #ffa31a;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 5px rgb(250, 100, 0);
 }
 
 .error-border {
@@ -208,6 +234,20 @@ tr:nth-child(even) {
 }
 
 
+
+.modes {
+    border: #ccc;
+    width: 30px;
+    cursor: pointer;
+
+}
+
+.modeSwitch {
+    padding: 5px;
+    background: #000000;
+    border-radius: 50px;
+    width: 50px;
+}
 
 
 /* Media Queries for Responsive Design */

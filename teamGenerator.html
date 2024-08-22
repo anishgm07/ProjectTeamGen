@@ -19,11 +19,16 @@
         <div class="header">
             <h1>Team Generator</h1>
         </div>
-        
+
+        <div class="alert" id="alert" style="display: none;">
+            <span class="closebtn" onclick="clearAlert()">&times;</span>
+            <span id="alertMsg"></span>
+        </div>
         <div class="sub-container">
             <div class="form-group">
                 <label for="players">Enter player names (one per line):</label>
-                <textarea onchange="generateLabel()" id="players" placeholder="Enter names here!"></textarea>
+                <textarea id="players" placeholder="Enter names here!"></textarea>
+                <div id="countDisplay">Number of players: 0</div>
             </div>
             <div class="form-group">
                 <label for="numTeams">Number of teams:</label>
@@ -46,16 +51,20 @@
                 </table>
             </div>
         </div>
-
         <div class="footer">
-            <p>
-                <a href="index.html" class="button">Back to Main Menu</a>
-            </p>
+            <div class="sub-footer">
+                <a href="index.html" class="button"> ◁ Back</a>
+                <div class="modeSwitch">
+                    <img class="modes" id="themeToggle" src="" alt="dark/light">
+                </div>
+
+            </div>
         </div>
     </div>
 
     <script src="teamGenerate.js"></script>
     <script src="common.js"></script>
+    <script src="themeToggle.js"></script>
 </body>
 
 </html>
