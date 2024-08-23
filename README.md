@@ -17,3 +17,6 @@ button
 
 header, footer
 #151515
+
+Symbols
+ ◁ ▷ ▽ △
