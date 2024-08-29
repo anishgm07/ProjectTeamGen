@@ -58,13 +58,13 @@ body {
 
 .light-mode-header {
     background-color: #ffffff;
-    color: #000000;
+    color: #222222;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }
 
 .light-mode-footer {
     background-color: #ffffff;
-    color: #000000;
+    color: #222222;
     box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -233,7 +233,34 @@ tr:nth-child(even) {
     border: 2px solid red !important;
 }
 
+.alert {
+    padding: 10px;
+    background-color: #f44336;
+    color: white;
+}
 
+.alert-restore {
+    display: block !important;
+}
+
+.alert-store {
+    display: none !important;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 30px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
 
 .modes {
     border: #ccc;

@@ -4,38 +4,35 @@ let teams = [];
 function generateTeams() {
 
     const playersInput = document.getElementById('players');
+    const alertInput = document.getElementById('alertMsg');
+    const closeBtnAction = document.getElementById('alert');
     const teamUp = document.getElementById('teamup');
     const generateButton = document.getElementById('generateButton');
     const playersValue = playersInput.value;
     const numTeams = parseInt(document.getElementById('numTeams').value);
-    let players = playersValue.split('\n').map(player => player.trim());
+    const players = playersValue.split(/[\n,]+/).filter(name => name.trim() !== '');
 
     playersInput.classList.remove('error-border');
     teamUp.classList.add('hidden');
 
     if (playersValue === '') {
         playersInput.classList.add('error-border');
-        alert('Please enter players.');
+        closeBtnAction.classList.add('alert-restore');
+        closeBtnAction.classList.remove('alert-store');
+        alertInput.innerHTML = 'Please enter players.';
         return;
-    }
-
-    if (players.length < numTeams) {
-        alert('Number of players is less than the number of teams.');
+    } else if (players.length < numTeams) {
+        closeBtnAction.classList.add('alert-restore');
+        closeBtnAction.classList.remove('alert-store');
+        alertInput.innerHTML = 'Number of players is less than the number of teams.';
         return;
-    }
-
-    if (players.length === numTeams) {
-        alert('Number of players is equal to the number of teams.');
+    } else if (players.length === numTeams) {
+        closeBtnAction.classList.add('alert-restore');
+        closeBtnAction.classList.remove('alert-store');
+        alertInput.innerHTML = 'Number of players is equal to the number of teams.';
         return;
-    }
-
-    const remainder = players.length % numTeams;
-
-    if (remainder !== 0) {
-        const userConfirmed = confirm('It’s not possible to distribute players equally. Proceed with uneven distribution?');
-        if (!userConfirmed) {
-            return; 
-        }
+    } else if (players.length % numTeams !== 0 && !confirm('Continue with uneven distribution?')) {
+        return;
     }
 
     teamUp.classList.remove('hidden');
@@ -51,8 +48,15 @@ function generateTeams() {
 
     saveToLocalStorage();
     displayTeams();
+    closeBtnAction.classList.add('alert-store')
     generateButton.textContent = 'Re-generate Teams';
 
+}
+
+// alerat the displayed alert
+function clearAlert() {
+    const closeBtnAction = document.getElementById('alert');
+    closeBtnAction.classList.add('alert-store')
 }
 
 // Function to display the teams
@@ -70,6 +74,23 @@ function displayTeams() {
     });
 }
 
+
+// Event listener to handle keyup events
+document.getElementById('players').addEventListener('keyup', function (event) {
+    // When Enter is pressed, set the flag to true
+    if (event.key === 'Backspace') {
+        generateLabel();
+    }
+});
+
+// Event listener to handle input changes
+document.getElementById('players').addEventListener('input', function (event) {
+    // Check if Enter was pressed before and input field has some value
+    if (event.target.value.length > 0) {
+        generateLabel();
+    }
+});
+
 //  Function to change Button name
 function generateLabel() {
     const generateButton = document.getElementById('generateButton');
@@ -77,6 +98,17 @@ function generateLabel() {
 
     generateButton.textContent = 'Generate Teams';
     teamUp.classList.add('hidden');
+
+    // Get the value from the textarea
+    const textArea = document.getElementById('players');
+    const text = textArea.value.trim();
+
+    const names = text.split(/[\n,]+/).filter(name => name.trim() !== '');
+    const count = names.length;
+
+    // Update the display
+    const countDisplay = document.getElementById('countDisplay');
+    countDisplay.textContent = `Number of players: ${count}`;
 }
 
 // Function to save the current state to local storage
