@@ -9,12 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
         header.classList.remove('light-mode-header');
         container.classList.remove('light-mode');
         footer.classList.remove('light-mode-footer');
-        themeToggleButton.src = 'https://img.icons8.com/external-glyph-silhouettes-icons-papa-vector/78/FFFFFF/external-Light-Mode-interface-glyph-silhouettes-icons-papa-vector.png';
+        themeToggleButton.src = 'https://img.icons8.com/ios/FFFFFF/do-not-disturb-2.png';
     } else {
         header.classList.add('light-mode-header');
         container.classList.add('light-mode');
         footer.classList.add('light-mode-footer');
-        themeToggleButton.src = 'https://img.icons8.com/ios/FFFFFF/do-not-disturb-2.png';
+        themeToggleButton.src = 'https://img.icons8.com/external-glyph-silhouettes-icons-papa-vector/78/FFFFFF/external-Light-Mode-interface-glyph-silhouettes-icons-papa-vector.png';
     }
 
     themeToggleButton.addEventListener('click', () => {

@@ -191,6 +191,10 @@ tr:nth-child(even) {
     display: none;
 }
 
+.team-th{
+    width: 70px;
+}
+
 /* Container for the select box */
 .select-container {
     position: relative;
@@ -264,7 +268,7 @@ tr:nth-child(even) {
 
 .modes {
     border: #ccc;
-    width: 30px;
+    width: 25px;
     cursor: pointer;
 
 }
@@ -272,8 +276,8 @@ tr:nth-child(even) {
 .modeSwitch {
     padding: 5px;
     background: #000000;
-    border-radius: 50px;
-    width: 50px;
+    border-radius: 25px;
+    width: 30px;
 }
 
 

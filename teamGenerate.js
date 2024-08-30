@@ -1,8 +1,8 @@
+// global variable to hold the generated teams
 let teams = [];
 
-// Function to generate teams from players
+// Function to generate teams
 function generateTeams() {
-
     const playersInput = document.getElementById('players');
     const alertInput = document.getElementById('alertMsg');
     const closeBtnAction = document.getElementById('alert');
@@ -47,33 +47,77 @@ function generateTeams() {
     }
 
     saveToLocalStorage();
-    displayTeams();
-    closeBtnAction.classList.add('alert-store')
+    displayTeamsWithDelay();
+    closeBtnAction.classList.add('alert-store');
     generateButton.textContent = 'Re-generate Teams';
-
 }
 
-// alerat the displayed alert
-function clearAlert() {
-    const closeBtnAction = document.getElementById('alert');
-    closeBtnAction.classList.add('alert-store')
-}
+// Function to display teams with a delay
+function displayTeamsWithDelay() {
+    const teamups = document.querySelector('#teamup-players tbody');
+    if (!teamups) {
+        console.error('Table body not found.');
+        return;
+    }
 
-// Function to display the teams
-function displayTeams() {
-    let teamups = document.querySelector('#teamup-players tbody');
     teamups.innerHTML = '';
 
-    teams.forEach((team, index) => {
+    // Initialize rows for teams
+    teams.forEach((_, index) => {
         teamups.innerHTML += `
-            <tr>
+            <tr data-team="${index}">
                 <td>Team ${index + 1}</td>
-                <td>${team.join(', ')}</td>
+                <td></td>
             </tr>
         `;
     });
+
+    // Create a queue to hold the players to be displayed in round-robin order
+    let displayQueue = [];
+
+    // Populate the queue with all players, each with a delay
+    let playerIndex = 0;
+    while (playerIndex < teams[0].length) {
+        teams.forEach((team, teamIndex) => {
+            if (playerIndex < team.length) {
+                displayQueue.push({
+                    team: teamIndex,
+                    player: team[playerIndex],
+                    delay: playerIndex * 500 // Delay based on player index
+                });
+            }
+        });
+        playerIndex++;
+    }
+
+    // Sort the queue based on delay times
+    displayQueue.sort((a, b) => a.delay - b.delay);
+
+    // Display players with delays
+    let currentIndex = 0;
+
+    function showNextPlayer() {
+        if (currentIndex < displayQueue.length) {
+            const { team, player } = displayQueue[currentIndex];
+            const teamRow = teamups.querySelector(`tr[data-team="${team}"] td:last-child`);
+            if (teamRow) {
+                teamRow.textContent += (teamRow.textContent ? ', ' : '') + player;
+            } else {
+                console.error(`Team row for Team ${team + 1} not found.`);
+            }
+            currentIndex++;
+            setTimeout(showNextPlayer, 1000); // Adjust delay as needed
+        }
+    }
+
+    showNextPlayer();
 }
 
+// Function to clear the alert
+function clearAlert() {
+    const closeBtnAction = document.getElementById('alert');
+    closeBtnAction.classList.add('alert-store');
+}
 
 // Event listener to handle keyup events
 document.getElementById('players').addEventListener('keyup', function (event) {
@@ -122,7 +166,7 @@ function loadFromLocalStorage() {
 
     if (savedTeams) {
         teams = JSON.parse(savedTeams);
-        displayTeams();
+        displayTeamsWithDelay();
     }
 }
 
