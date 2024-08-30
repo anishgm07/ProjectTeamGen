@@ -56,7 +56,11 @@ body {
     background-color: #f7f7f7;
 }
 
-.light-mode-header {
+.light-mode h2 {
+    color: #222222;
+}
+
+.light-mode-header  {
     background-color: #ffffff;
     color: #222222;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
@@ -180,8 +184,20 @@ th {
 
 thead {
     background-color: #161616;
-
 }
+
+.thead-light {
+    background-color: #353535;
+}
+
+.tbody-light tr:nth-child(even)  {
+    background-color: #353535;
+}
+
+.tbody-light tr:nth-child(odd){
+    color: #000000;
+}
+
 
 tr:nth-child(even) {
     background-color: #161616;
@@ -191,7 +207,7 @@ tr:nth-child(even) {
     display: none;
 }
 
-.team-th{
+.team-th {
     width: 70px;
 }
 

@@ -11,7 +11,7 @@ function populateTeamOptions() {
     for (let i = minTeams; i <= maxTeams; i++) {
         const option = document.createElement('option');
         option.value = i;
-        option.textContent = i;
+        option.textContent = i + " Teams";
         numTeamsSelect.appendChild(option);
     }
 }
