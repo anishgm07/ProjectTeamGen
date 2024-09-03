@@ -11,6 +11,13 @@ Color Palette
 
 #000000
 
+background-color: rgb(32, 33, 36)
+
+dark theme BG
+#0a0a0a;
+
+light theme BG
+#fafafa;
 
 button
 #1f1f1f
