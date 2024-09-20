@@ -1,7 +1,5 @@
 # ProjectTeamGen
 
-
-
 Color Palette
 #ffa31a	(255,163,26)
 #808080	(128,128,128)
@@ -11,7 +9,6 @@ Color Palette
 
 #000000
 
-
 button
 #1f1f1f
 
@@ -20,5 +17,3 @@ header, footer
 
 Symbols
  ◁ ▷ ▽ △
-
- a

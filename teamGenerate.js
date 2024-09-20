@@ -1,8 +1,13 @@
-// global variable to hold the generated teams
+// global variable to hold the generated teams and timeouts
 let teams = [];
+let timeoutIds = [];  // To store the setTimeout IDs
+let isGenerating = false;  // To prevent multiple regenerations
 
 // Function to generate teams
 function generateTeams() {
+    // Reset timeout IDs and stop any ongoing team display
+    clearAllTimeouts();
+    
     const playersInput = document.getElementById('players');
     const alertInput = document.getElementById('alertMsg');
     const closeBtnAction = document.getElementById('alert');
@@ -14,6 +19,8 @@ function generateTeams() {
 
     playersInput.classList.remove('error-border');
     teamUp.classList.add('hidden');
+
+    teams = [];  // Reset the teams array
 
     if (playersValue === '') {
         playersInput.classList.add('error-border');
@@ -37,8 +44,9 @@ function generateTeams() {
 
     teamUp.classList.remove('hidden');
 
-    teams = Array.from({ length: numTeams }, () => []);
+    teams = Array.from({ length: numTeams }, () => []);  // Create empty teams array
 
+    // Shuffle and distribute players
     while (players.length) {
         for (let i = 0; i < numTeams && players.length; i++) {
             const randomIndex = Math.floor(Math.random() * players.length);
@@ -46,8 +54,7 @@ function generateTeams() {
         }
     }
 
-    saveToLocalStorage();
-    displayTeamsWithDelay();
+    displayTeamsWithDelay();  // Display teams with delay
     closeBtnAction.classList.add('alert-store');
     generateButton.textContent = 'Re-generate Teams';
 }
@@ -60,7 +67,7 @@ function displayTeamsWithDelay() {
         return;
     }
 
-    teamups.innerHTML = '';
+    teamups.innerHTML = '';  // Clear previous teams
 
     // Initialize rows for teams
     teams.forEach((_, index) => {
@@ -72,10 +79,8 @@ function displayTeamsWithDelay() {
         `;
     });
 
-    // Create a queue to hold the players to be displayed in round-robin order
-    let displayQueue = [];
+    let displayQueue = [];  // Reset the display queue
 
-    // Populate the queue with all players, each with a delay
     let playerIndex = 0;
     while (playerIndex < teams[0].length) {
         teams.forEach((team, teamIndex) => {
@@ -83,17 +88,15 @@ function displayTeamsWithDelay() {
                 displayQueue.push({
                     team: teamIndex,
                     player: team[playerIndex],
-                    delay: playerIndex * 500 // Delay based on player index
+                    delay: playerIndex * 500  // Delay based on player index
                 });
             }
         });
         playerIndex++;
     }
 
-    // Sort the queue based on delay times
     displayQueue.sort((a, b) => a.delay - b.delay);
 
-    // Display players with delays
     let currentIndex = 0;
 
     function showNextPlayer() {
@@ -105,12 +108,23 @@ function displayTeamsWithDelay() {
             } else {
                 console.error(`Team row for Team ${team + 1} not found.`);
             }
+
+            // Set a new timeout to show the next player
+            const timeoutId = setTimeout(showNextPlayer, 1000);
+            timeoutIds.push(timeoutId);  // Store the timeout ID
             currentIndex++;
-            setTimeout(showNextPlayer, 1000); // Adjust delay as needed
         }
     }
 
+    isGenerating = true;
     showNextPlayer();
+}
+
+// Function to clear all timeouts when regenerating teams
+function clearAllTimeouts() {
+    timeoutIds.forEach(timeoutId => clearTimeout(timeoutId));  // Clear all active timeouts
+    timeoutIds = [];  // Reset the timeout array
+    isGenerating = false;
 }
 
 // Function to clear the alert
@@ -121,7 +135,6 @@ function clearAlert() {
 
 // Event listener to handle keyup events
 document.getElementById('players').addEventListener('keyup', function (event) {
-    // When Enter is pressed, set the flag to true
     if (event.key === 'Backspace') {
         generateLabel();
     }
@@ -129,7 +142,6 @@ document.getElementById('players').addEventListener('keyup', function (event) {
 
 // Event listener to handle input changes
 document.getElementById('players').addEventListener('input', function (event) {
-    // Check if Enter was pressed before and input field has some value
     if (event.target.value.length > 0) {
         generateLabel();
     }
@@ -143,32 +155,12 @@ function generateLabel() {
     generateButton.textContent = 'Generate Teams';
     teamUp.classList.add('hidden');
 
-    // Get the value from the textarea
     const textArea = document.getElementById('players');
     const text = textArea.value.trim();
 
     const names = text.split(/[\n,]+/).filter(name => name.trim() !== '');
     const count = names.length;
 
-    // Update the display
     const countDisplay = document.getElementById('countDisplay');
     countDisplay.textContent = `Number of players: ${count}`;
 }
-
-// Function to save the current state to local storage
-function saveToLocalStorage() {
-    localStorage.setItem('teams', JSON.stringify(teams));
-}
-
-// Function to load the saved state from local storage
-function loadFromLocalStorage() {
-    const savedTeams = localStorage.getItem('teams');
-
-    if (savedTeams) {
-        teams = JSON.parse(savedTeams);
-        displayTeamsWithDelay();
-    }
-}
-
-// Load the saved state when the page loads
-window.onload = loadFromLocalStorage;
