@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const thead = document.querySelector('thead');
     const tbody = document.querySelector('tbody');
     const container = document.querySelector('.container');
-    const lightMode = '../images/light-mode-icon.png';
-    const darkMode = '../images/dark-mode-icon.png';
+    const lightMode = 'images/light-mode-icon.png';
+    const darkMode = 'images/dark-mode-icon.png';
 
     // Check for saved theme preference in localStorage 
     if (localStorage.getItem('theme') === 'dark') {
