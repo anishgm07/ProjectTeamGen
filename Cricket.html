@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Oswald:wght@500&family=Pinyon+Script&family=Syne:wght@533&display=swap"
+        rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Scheduler and Scorer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cricket Scheduler and Scorer</h1>
+        </div>
+
+        <div class="alert" id="alert" style="display: none;">
+            <span class="closebtn" onclick="clearAlert()">&times;</span>
+            <span id="alertMsg"></span>
+        </div>
+
+        <div class="sub-container">
+            <div class="form-group">
+                <label for="players">Enter player names (one per line):</label>
+                <textarea id="players" placeholder="Enter names here!"></textarea>
+                <div id="countDisplay">Number of players: 0</div>
+            </div>
+            <div class="form-group">
+                <label for="numTeams">Number of teams:</label>
+                <div class="select-container">
+                    <select id="numTeams"></select>
+                </div>
+            </div>
+            <button id="generateButton" onclick="generateTeams()">Generate Teams</button>
+
+            <div id="teamup" class="hidden">
+                <h2>Teams:</h2>
+                <table id="teamup-players">
+                    <thead>
+                        <tr>
+                            <th class="team-th">Team</th>
+                            <th>Players</th>
+                        </tr>
+                    </thead>
+                    <tbody> </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>Match Scheduler</h2>
+                <label for="teams">Teams:</label>
+                <label id="teamLabel"></label>
+            </div>
+
+            <div id="scheduler">
+                <label for="overs">Number of Overs:</label>
+                <input type="number" id="overs" min="1">
+                <button onclick="scheduleMatch()">Schedule Match</button>
+            </div>
+
+            <div id="teams"></div>
+
+            <div id="team1OversTables"></div>
+
+            <div id="team2OversTables"></div>
+
+            <div id="scoreboard">
+                <p>Total Runs: 0, Wickets: 0</p>
+            </div>
+
+
+
+        </div>
+        <div class="footer">
+            <div class="sub-footer">
+                <a href="index.html" class="button"> ◁ Back</a>
+                <div class="modeSwitch">
+                    <img class="modes" id="themeToggle" src="" alt="dark/light">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="teamGenerate.js"></script>
+    <script src="common.js"></script>
+    <script src="cricket.js"></script>
+    <script src="themeToggle.js"></script>
+</body>
+
+</html>
